@@ -1,0 +1,101 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <div class="columns">
+    <div class="column is-one-third">
+      <div class="box has-text-centered">
+        {% if production.cover_filename %}
+          <figure class="image is-3by4">
+            <img src="{{ production.cover_filename }}" alt="Cover">
+          </figure>
+        {% else %}
+          <div class="cover-placeholder">Cover image</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="box">
+        <h1 class="title">{{ production.title }}</h1>
+        {% if production.subtitle %}<h3 class="subtitle">{{ production.subtitle }}</h3>{% endif %}
+        <p><strong>Location:</strong> {{ production.location }}</p>
+        <p><strong>Admission:</strong> {{ production.price }}</p>
+        {% if production.copyright %}<p><small>{{ production.copyright }}</small></p>{% endif %}
+        {% if production.notes %}<p><em>{{ production.notes }}</em></p>{% endif %}
+        {% if production.dates_text %}<p><strong>Dates:</strong> {{ production.dates_text }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <section>
+    <h2 class="title is-4">Creative Team</h2>
+    <div class="box">
+    {% for t in team %}
+      <p><b>{{ t.position }}</b>: {{ t.name }}</p>
+    {% else %}
+      <p><em>No team members listed.</em></p>
+    {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2 class="title is-4">Cast</h2>
+    <div class="box">
+    {% for r in cast %}
+      <p><b>{{ r.role }}</b>:
+        {% if r.students %}
+          {{ r.students | join(', ') }}
+        {% else %}
+          <em>—</em>
+        {% endif %}
+      </p>
+    {% else %}
+      <p><em>No cast yet.</em></p>
+    {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2 class="title is-4">Songs</h2>
+    <div class="box">
+    {% for s in songs %}
+      <p><b>Act {{ s.act }} — {{ s.title }}</b> {% if s.performers_text %} — {{ s.performers_text }}{% endif %}</p>
+    {% else %}
+      <p><em>No songs.</em></p>
+    {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2 class="title is-4">Crew</h2>
+    <div class="box">
+    {% for c in crew %}
+      <p>{{ c.student.full_name() }} — {{ c.responsibility or 'Crew' }}</p>
+    {% else %}
+      <p><em>No crew listed.</em></p>
+    {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2 class="title is-4">Special Thanks</h2>
+    <div class="box">
+    {% for t in thanks %}
+      <p>{{ t.text }}</p>
+    {% else %}
+      <p><em>No acknowledgments.</em></p>
+    {% endfor %}
+    </div>
+  </section>
+
+  <p class="mt-4"><a href="{{ url_for('view.viewer_home') }}" class="button is-light">← Back</a></p>
+{% endblock %}

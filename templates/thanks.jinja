@@ -1,0 +1,29 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <h1 class="title">Special Thanks — {{ production.title }}</h1>
+
+  <div class="box">
+  {% for t in thanks %}
+    <div class="block">
+      <p>{{ t.text }}</p>
+      <p><a class="button is-small is-danger is-light" href="{{ url_for('edit.delete_thanks', thanks_id=t.id) }}">Remove</a></p>
+    </div>
+  {% else %}
+    <p><em>No acknowledgments yet.</em></p>
+  {% endfor %}
+  </div>
+
+  <hr>
+  <h3 class="title is-5">Add Acknowledgment</h3>
+  <form method="POST" action="{{ url_for('edit.add_thanks', production_id=production.id) }}">
+    <div class="field">
+      <label class="label">Text</label>
+      <div class="control"><textarea class="textarea" name="text" placeholder="Enter acknowledgment text" required></textarea></div>
+    </div>
+    <div class="field">
+      <div class="control"><button class="button is-primary" type="submit">Add</button></div>
+    </div>
+  </form>
+
+  <p class="mt-3"><a href="{{ url_for('view.view_production', production_id=production.id) }}">Back to program</a></p>
+{% endblock %}

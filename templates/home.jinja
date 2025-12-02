@@ -1,0 +1,28 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <div class="hero is-fullheight-minus-navbar" style="display: flex; align-items: center; justify-content: center;">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1">High School Musical</h1>
+        <p class="subtitle is-3">A Musical Production Program</p>
+        
+        <div class="columns is-centered mt-6">
+          <div class="column is-half">
+            <div class="box">
+              <h2 class="title is-4">Viewer</h2>
+              <p class="mb-4">Browse and view the musical program, cast, crew, creative team, and songs.</p>
+              <a href="{{ url_for('view.viewer_home') }}" class="button is-info is-large is-fullwidth">Enter as Viewer</a>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box">
+              <h2 class="title is-4">Director</h2>
+              <p class="mb-4">Create and manage productions, assign roles, edit cast, songs, and more.</p>
+              <a href="{{ url_for('view.director_home') }}" class="button is-success is-large is-fullwidth">Enter as Director</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "base.jinja" %}
+{% block content %}
+  {% if production %}
+    <!-- Director view with edit controls -->
+    <p><a href="{{ url_for('view.home') }}" class="button is-light">← Back</a></p>
+    <section class="program">
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="box has-text-centered">
+            {% if production.cover_filename %}
+              <figure class="image is-3by4">
+                <img src="{{ production.cover_filename }}" alt="Cover">
+              </figure>
+            {% else %}
+              <div class="cover-placeholder">Cover image</div>
+            {% endif %}
+            <p class="mt-3"><a class="button is-small is-link" href="{{ url_for('edit.edit_production', production_id=production.id) }}">Change cover</a></p>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="box">
+            <h1 class="title">{{ production.title }}</h1>
+            {% if production.subtitle %}<h3 class="subtitle">{{ production.subtitle }}</h3>{% endif %}
+            <p><strong>Location:</strong> {{ production.location }}</p>
+            <p><strong>Admission:</strong> {{ production.price }}</p>
+            {% if production.copyright %}<p><small>{{ production.copyright }}</small></p>{% endif %}
+            {% if production.notes %}<p><em>{{ production.notes }}</em></p>{% endif %}
+            {% if production.dates_text %}<p><strong>Dates:</strong> {{ production.dates_text }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+    <hr>
+
+    <section>
+      <h2 class="title is-4">Creative Team</h2>
+      <div class="box">
+      {% for t in team %}
+        <p><b>{{ t.position }}</b>: {{ t.name }} <a class="button is-small is-danger is-light" href="{{ url_for('edit.delete_team', tm_id=t.id) }}">Remove</a></p>
+      {% else %}
+        <p><em>No team members listed.</em></p>
+      {% endfor %}
+      <form method="POST" action="{{ url_for('edit.add_team', production_id=production.id) }}" class="mt-3">
+        <div class="field is-grouped">
+          <div class="control"><input class="input" name="name" placeholder="Name"></div>
+          <div class="control"><input class="input" name="position" placeholder="Position (e.g., Director)"></div>
+          <div class="control"><button class="button is-primary" type="submit">Add</button></div>
+        </div>
+      </form>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2 class="title is-4">Cast</h2>
+      <div class="box">
+      {% for r in cast %}
+        <p><b>{{ r.role }}</b>:
+          {% if r.students %}
+            {{ r.students | join(', ') }}
+          {% else %}
+            <em>—</em>
+          {% endif %}
+        </p>
+      {% else %}
+        <p><em>No cast yet.</em></p>
+      {% endfor %}
+      <p class="mt-2"><a class="button is-link is-light" href="{{ url_for('view.view_cast', production_id=production.id) }}">Manage cast & assign roles</a></p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2 class="title is-4">Songs</h2>
+      <div class="box">
+      {% for s in songs %}
+        <p><b>Act {{ s.act }} — {{ s.title }}</b> {% if s.performers_text %} — {{ s.performers_text }}{% endif %} <a class="button is-small is-light" href="{{ url_for('edit.edit_song', song_id=s.id) }}">Edit</a></p>
+      {% else %}
+        <p><em>No songs.</em></p>
+      {% endfor %}
+      <p class="mt-2"><a class="button is-link is-light" href="{{ url_for('view.view_songs', production_id=production.id) }}">Manage songs</a></p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2 class="title is-4">Crew</h2>
+      <div class="box">
+      {% for c in crew %}
+        <p>{{ c.student.full_name() }} — {{ c.responsibility or 'Crew' }}</p>
+      {% else %}
+        <p><em>No crew listed.</em></p>
+      {% endfor %}
+      <p class="mt-2"><a class="button is-link is-light" href="{{ url_for('view.view_crew', production_id=production.id) }}">Manage crew</a></p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2 class="title is-4">Special Thanks</h2>
+      <div class="box">
+      {% for t in thanks %}
+        <p>{{ t.text }} <a class="button is-small is-danger is-light" href="{{ url_for('edit.delete_thanks', thanks_id=t.id) }}">Remove</a></p>
+      {% else %}
+        <p><em>No acknowledgments.</em></p>
+      {% endfor %}
+      <form method="POST" action="{{ url_for('edit.add_thanks', production_id=production.id) }}" class="mt-3">
+        <div class="field"><div class="control"><textarea class="textarea" name="text" placeholder="Add acknowledgment or copyright info"></textarea></div></div>
+        <div class="field"><div class="control"><button class="button is-primary" type="submit">Add</button></div></div>
+      </form>
+      </div>
+    </section>
+
+  {% else %}
+    <h1 class="title">Director's Interface</h1>
+    <div class="box">
+    <h2 class="title is-4">Create a Production</h2>
+    <form method="POST" action="{{ url_for('edit.create_production') }}" enctype="multipart/form-data">
+      <div class="field"><div class="control"><input class="input" name="title" placeholder="Title" required></div></div>
+      <div class="field"><div class="control"><input class="input" name="subtitle" placeholder="Subtitle (e.g., Disney's)"></div></div>
+      <div class="field"><div class="control"><input class="input" name="dates" placeholder="Dates (comma separated)"></div></div>
+      <div class="field"><div class="control"><input type="file" class="file-input" name="cover" accept="image/*"></div></div>
+      <div class="field"><div class="control"><input class="input" name="location" placeholder="Location"></div></div>
+      <div class="field"><div class="control"><input class="input" name="price" placeholder="Price"></div></div>
+      <div class="field"><div class="control"><input class="input" name="copyright" placeholder="Copyright"></div></div>
+      <div class="field"><div class="control"><textarea class="textarea" name="notes" placeholder="Notes"></textarea></div></div>
+      <div class="field"><div class="control"><button class="button is-primary" type="submit">Create production</button></div></div>
+    </form>
+    </div>
+
+    <hr>
+    <h2 class="title is-4">Existing productions</h2>
+    {% if productions %}
+      <div class="box">
+      <ul>
+      {% for p in productions %}
+        <li><a href="{{ url_for('view.view_production', production_id=p.id) }}">{{ p.title }}</a> — <a href="{{ url_for('edit.edit_production', production_id=p.id) }}">Edit</a></li>
+      {% endfor %}
+      </ul>
+      </div>
+    {% else %}
+      <p><em>No productions yet.</em></p>
+    {% endif %}
+
+    <p class="mt-4"><a href="{{ url_for('view.home') }}" class="button is-light">← Back</a></p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <h1 class="title">Crew — {{ production.title }}</h1>
+
+  <div class="box">
+  {% for c in crew %}
+    <p>{{ c.student.full_name() }} — {{ c.responsibility or 'Crew' }} <a href="{{ url_for('delete_crew', crew_id=c.id) }}">[remove]</a></p>
+  {% else %}
+    <p><em>No crew</em></p>
+  {% endfor %}
+  </div>
+
+  <hr>
+  <h3 class="title is-5">Add Crew Member</h3>
+  <form method="POST">
+    <div class="field">
+      <div class="control">
+        <div class="select">
+          <select name="student_id">
+            {% for s in students %}
+              <option value="{{ s.id }}">{{ s.full_name() }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control"><input class="input" name="responsibility" placeholder="Responsibility (e.g., Stagehand)"></div>
+    </div>
+    <div class="field">
+      <div class="control"><button class="button is-primary" type="submit">Add</button></div>
+    </div>
+  </form>
+
+  <p><a href="{{ url_for('view.view_production', production_id=production.id) }}">Back to program</a></p>
+{% endblock %}

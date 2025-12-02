@@ -1,0 +1,26 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <h1 class="title">Songs — {{ production.title }}</h1>
+
+  <div class="box">
+  {% for s in songs %}
+    <div class="block">
+      <p><b>Act {{ s.act }} — {{ s.title }}</b> {% if s.performers_text %} — {{ s.performers_text }}{% endif %}</p>
+      <p><a class="button is-small is-info is-light" href="{{ url_for('edit.edit_song', song_id=s.id) }}">Edit</a> <a class="button is-small is-danger is-light" href="{{ url_for('edit.delete_song', song_id=s.id) }}">Delete</a></p>
+    </div>
+  {% else %}
+    <p><em>No songs yet</em></p>
+  {% endfor %}
+  </div>
+
+  <hr>
+  <h3 class="title is-5">Add Song</h3>
+  <form method="POST" action="{{ url_for('edit.add_song', production_id=production.id) }}">
+    <div class="field"><div class="control"><input class="input" name="title" placeholder="Song title" required></div></div>
+    <div class="field"><div class="control"><input class="input" name="performers" placeholder="Performers (comma separated)"></div></div>
+    <div class="field"><div class="control"><input class="input" name="act" placeholder="Act" type="number" min="1" value="1"></div></div>
+    <div class="field"><div class="control"><button class="button is-primary" type="submit">Add Song</button></div></div>
+  </form>
+
+  <p class="mt-3"><a href="{{ url_for('view.view_production', production_id=production.id) }}">Back to program</a></p>
+{% endblock %}

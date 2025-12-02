@@ -1,0 +1,28 @@
+{% extends "base.jinja" %}
+{% block content %}
+  <h1 class="title">Edit Production</h1>
+  
+  <div class="box">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="field"><div class="control"><input class="input" name="title" placeholder="Title" value="{{ production.title }}" required></div></div>
+      <div class="field"><div class="control"><input class="input" name="subtitle" placeholder="Subtitle" value="{{ production.subtitle or '' }}"></div></div>
+      <div class="field"><div class="control"><input class="input" name="dates" placeholder="Dates" value="{{ production.dates_text or '' }}"></div></div>
+      <div class="field"><div class="control"><input type="file" name="cover" accept="image/*"></div></div>
+      <div class="field"><div class="control"><input class="input" name="location" placeholder="Location" value="{{ production.location or '' }}"></div></div>
+      <div class="field"><div class="control"><input class="input" name="price" placeholder="Price" value="{{ production.price or '' }}"></div></div>
+      <div class="field"><div class="control"><input class="input" name="copyright" placeholder="Copyright" value="{{ production.copyright or '' }}"></div></div>
+      <div class="field"><div class="control"><textarea class="textarea" name="notes" placeholder="Notes">{{ production.notes or '' }}</textarea></div></div>
+      <div class="field"><button class="button is-primary" type="submit">Save</button></div>
+    </form>
+  </div>
+
+  <div class="box">
+    <h2 class="title is-5">Delete Production</h2>
+    <p class="mb-3"><em>Warning: This cannot be undone.</em></p>
+    <form method="POST" action="{{ url_for('edit.delete_production', production_id=production.id) }}">
+      <button class="button is-danger" type="submit">Delete Production</button>
+    </form>
+  </div>
+
+  <p class="mt-3"><a href="{{ url_for('view.view_production', production_id=production.id) }}" class="button is-light">← Back</a></p>
+{% endblock %}
